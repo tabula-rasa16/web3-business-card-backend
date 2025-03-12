@@ -1,0 +1,6 @@
+Flask
+Flask-MySQLdb
+flask-cors 
+flask-jwt-extended 
+eth-account
+redis
