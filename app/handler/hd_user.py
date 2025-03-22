@@ -66,8 +66,8 @@ def create_user():
     print(data)
     # if not data or 'wallet_address' not in data or 'username' not in data:
     #         return response(code=400, message="Missing required fields")
-    users_db.add_user(data['wallet_address'], data['username'], data.get('avatar_url'), data.get('gender'), data.get('bio'))
-    return response(code=200, message="User created Success")
+    user_id = users_db.add_user(data['wallet_address'], data['username'], data.get('avatar_url'), data.get('gender'), data.get('bio'))
+    return response(code=200, message="User created Success",data = {"user_id": user_id})
 
 @user_bp.route('/update', methods=['POST'])
 # @jwt_required()  # 需要携带 JWT Token

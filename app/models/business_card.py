@@ -33,9 +33,53 @@ def get_business_card_by_id(card_id):
     """通过 ID 获取单个名片"""
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM business_cards WHERE id = %s and data_status=0", (card_id,))
-    card = cur.fetchone()
+    item = cur.fetchone()
     cur.close()
-    return card
+    if item is not None: 
+        card = {
+                    "id": item[0],
+                    "user_id": item[1],
+                    "display_name": item[2],
+                    "company": item[3],
+                    "job_title": item[4],
+                    "website_url": item[5],
+                    "portfolio_url": item[6],
+                    "debox_account": item[7],
+                    "email": item[8],
+                    "phone": item[9],
+                    "data_status": item[10],
+                    "created_at": datetime_serializer(item[11]),
+                    "updated_at": datetime_serializer(item[12]),
+                    "share_token": item[13],
+                    "shared_status": item[14]
+                }
+        return card
+    return None
+
+def get_business_card_by_share_token(share_token):
+    """通过分享token获取名片"""
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM business_cards WHERE share_token = %s and data_status=0 and shared_status=0", (share_token,))
+    item = cur.fetchone()
+    cur.close()
+    if item is not None:
+        card = {
+                    "id": item[0],
+                    "user_id": item[1],
+                    "display_name": item[2],
+                    "company": item[3],
+                    "job_title": item[4],
+                    "website_url": item[5],
+                    "portfolio_url": item[6],
+                    "debox_account": item[7],
+                    "email": item[8],
+                    "phone": item[9],
+                    "data_status": item[10],
+                    "created_at": datetime_serializer(item[11]),
+                    "updated_at": datetime_serializer(item[12])
+                }
+        return card
+    return None
 
 def add_business_card(user_id, display_name, company, job_title, website_url, portfolio_url, debox_account, email, phone):
     """添加新的名片"""
@@ -45,8 +89,10 @@ def add_business_card(user_id, display_name, company, job_title, website_url, po
         (user_id, display_name, company, job_title, website_url, portfolio_url, debox_account, email, phone) 
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """, (user_id, display_name, company, job_title, website_url, portfolio_url, debox_account, email, phone))
+    card_id = cur.lastrowid
     mysql.connection.commit()
     cur.close()
+    return {"card_id": card_id}
 
 def update_business_card(card_id, display_name, company, job_title, website_url, portfolio_url, debox_account, email, phone):
     """更新名片信息"""
@@ -65,6 +111,31 @@ def delete_business_card(card_id):
     cur.execute("UPDATE business_cards SET data_status=1 WHERE id=%s", (card_id,))
     mysql.connection.commit()
     cur.close()
+
+def update_business_card_share_info(card_id, share_token=None, shared_status=None):
+    """更新名片分享信息"""
+    cur = mysql.connection.cursor()
+    sql = "UPDATE business_cards SET "
+    updates = []
+    params = []
+
+    if share_token:
+        updates.append("share_token = %s")
+        params.append(share_token)
+    if shared_status:
+        updates.append("shared_status = %s")
+        params.append(shared_status)
+
+    if not updates:
+        return {"message": "No fields to update"}
+
+    sql += ", ".join(updates) + " WHERE id = %s"
+    params.append(card_id)
+
+    cur.execute(sql, params)
+    mysql.connection.commit()
+    cur.close()
+    return {"message": "Shared info updated successfully"}
 
 
 # 社交帐号相关

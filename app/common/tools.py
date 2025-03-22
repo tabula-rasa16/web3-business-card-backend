@@ -1,5 +1,8 @@
 from flask import jsonify
 from datetime import datetime
+import uuid
+
+
 
 # 返回数据格式模板
 def response(code=200, data=None, message="Success"):
@@ -25,3 +28,8 @@ def params_preprocess(params):
 def datetime_serializer(obj):
     if isinstance(obj, datetime):
         return obj.strftime('%Y-%m-%d %H:%M:%S')
+    
+
+# 生成唯一ID（用于分享名片链接生成）
+def generate_unique_id():
+    return str(uuid.uuid4())

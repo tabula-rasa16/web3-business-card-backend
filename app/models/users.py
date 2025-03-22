@@ -32,28 +32,32 @@ def get_user_id_by_wallet_address(wallet_address):
     cur.execute("SELECT id FROM users WHERE wallet_address = %s and data_status=0", (wallet_address,))
     user = cur.fetchone()
     cur.close()
-    result = {
-        "id": user[0]
-    }
-    return result
+    if user is not None:
+        result = {
+            "id": user[0]
+        }
+        return result
+    return None
 
 def get_user_by_id(user_id):
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users WHERE id = %s and data_status=0", (user_id,))
     user = cur.fetchone()
     cur.close()
-    result = {
-        "id": user[0],
-        "wallet_address": user[1],
-        "username": user[2],
-        "avatar_url": user[3],
-        "gender": user[4],
-        "bio": user[5],
-        "data_status": user[6],
-        "created_at": datetime_serializer(user[7]),
-        "updated_at": datetime_serializer(user[8])
-    }
-    return result
+    if user is not None:
+        result = {
+            "id": user[0],
+            "wallet_address": user[1],
+            "username": user[2],
+            "avatar_url": user[3],
+            "gender": user[4],
+            "bio": user[5],
+            "data_status": user[6],
+            "created_at": datetime_serializer(user[7]),
+            "updated_at": datetime_serializer(user[8])
+        }
+        return result
+    return None
 
 def add_user(wallet_address, username, avatar_url, gender, bio):
     cur = mysql.connection.cursor()
@@ -61,6 +65,7 @@ def add_user(wallet_address, username, avatar_url, gender, bio):
                 (wallet_address, username, avatar_url, gender, bio))
     mysql.connection.commit()
     cur.close()
+    return cur.lastrowid  
 
 def update_user(user_id, username, avatar_url, gender, bio):
     cur = mysql.connection.cursor()
