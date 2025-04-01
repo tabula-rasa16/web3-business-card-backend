@@ -2,7 +2,10 @@ from flask import request, jsonify
 from app import app
 # import models.users as users_db
 import app.models.digital_assets as digital_assets_db
+import app.models.users as users_db
+import app.models.supported_chain as supported_chain_db
 from app.common.tools import response, params_preprocess,generate_unique_id
+from app.common.moralis_api import *
 
 # import random
 from flask import Blueprint, request, jsonify
@@ -16,7 +19,45 @@ from app.handler.hd_base import require
 from app.bpurl import digitalAsset_bp
 
 import json
+import requests
 
+
+# 获取Moralis API支持的链
+@digitalAsset_bp.route('/getSupportedChains', methods=['GET'])
+# @jwt_required
+def get_supported_chains():
+    result = supported_chain_db.get_all_supported_chains()
+    return response(data=result)
+
+
+# 通过Moralis API获取钱包中的token
+@digitalAsset_bp.route('/getWalletTokens', methods=['POST'])
+# @jwt_required
+@require("address","chain")
+def get_wallet_tokens():
+    data = request.json
+    data = params_preprocess(data)
+    token_addresses = data["token_addresses"] if data.get("token_addresses") else []
+    result = get_token_balance(data["address"], data["chain"], token_addresses, data.get("limit"))
+    return response(data=result)
+
+
+    # headers = {"x-api-key": app.config["MORALIS_API_KEY"]}
+    # url = f"https://deep-index.moralis.io/api/v2/{address}/erc20?chain={chain}"
+    
+    # response = requests.get(url, headers=headers)
+    # return jsonify(response.json())
+
+# 通过Moralis API获取钱包中的nft
+@digitalAsset_bp.route('/getWalletNfts', methods=['POST'])
+# @jwt_required
+@require("address","chain")
+def get_nfts():
+    data = request.json
+    data = params_preprocess(data)
+    token_addresses = data["token_addresses"] if data.get("token_addresses") else []
+    result = get_wallet_nfts(wallet_address=data["address"], chain=data["chain"], token_addresses=token_addresses, limit=data.get("limit"))
+    return response(data=result)
 
 
 
@@ -57,17 +98,67 @@ def batch_create_digital_asset():
         return response(message="Batch create digital asset successfully")
     
 # 根据用户id获取数字资产记录(支持选择展示全部/展示已上架)
+# @digitalAsset_bp.route('/get/', methods=['GET'])
+# # @jwt_required
+# def get_digital_asset():
+#     user_id = request.args.get("user_id")
+#     is_display = request.args.get("is_display")
+#     # 获取数字资产记录
+#     if is_display is not None:
+#         digital_assets = digital_assets_db.get_assets_by_user_id(user_id, is_display)
+#     else:
+#         digital_assets = digital_assets_db.get_assets_by_user_id(user_id)
+#     return response(data=digital_assets, message="Get digital asset successfully")
+
+
+# 根据用户id获取数字资产记录
 @digitalAsset_bp.route('/get/', methods=['GET'])
 # @jwt_required
 def get_digital_asset():
-    user_id = request.args.get("user_id")
-    is_display = request.args.get("is_display")
+    user_id= request.args.get("user_id")
+    chain = request.args.get("chain")
+    limit = request.args.get("limit")
+
+
+    if limit is not None:
+        try:
+            limit = int(limit)  
+        except ValueError:
+            # 转换失败，返回错误信息
+            return response(code=400, message="Invalid limit parameter, must be a number")
+
     # 获取数字资产记录
-    if is_display is not None:
-        digital_assets = digital_assets_db.get_assets_by_user_id(user_id, is_display)
-    else:
+    # 根据用户id获取钱包地址
+    user_wallet_address = users_db.get_user_by_id(user_id).get("wallet_address").lower()
+
+    # 从库中查询其资产信息，分别查token和nft
+    token_addresses = []
+    nft_addresses = []
+    if user_wallet_address is not None and user_wallet_address != "":
         digital_assets = digital_assets_db.get_assets_by_user_id(user_id)
-    return response(data=digital_assets, message="Get digital asset successfully")
+        for item in digital_assets:
+            if item.get("asset_type") == 'TOKEN':
+                token_addresses.append(item.get("contract_address").lower())
+            elif item.get("asset_type") == 'NFT':
+                nft_addresses.append(item.get("contract_address").lower())
+   
+    
+    # 从对应的链上获取token和nft信息
+    token_list = get_token_balance(wallet_address=user_wallet_address, chain=chain, token_addresses=token_addresses, limit=limit)
+   
+    nft_list = get_wallet_nfts(wallet_address=user_wallet_address, chain=chain, limit=limit, token_addresses=nft_addresses)
+
+    # 合并token和nft信息并返回
+    result = {
+        "token_list": token_list,
+        "nft_list": nft_list
+    }
+    
+    return response(data=result, message="Get digital asset successfully")
+
+
+
+
 
 # 批量更新数字资产记录
 @digitalAsset_bp.route('/batchUpdate', methods=['POST'])
