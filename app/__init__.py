@@ -16,7 +16,7 @@ CORS(app)  # 允许跨域
 JWTManager(app)  # 初始化 JWT
 
 # 注册路由
-from app.bpurl import auth_bp, user_bp, businessCard_bp, digitalAsset_bp, feedback_bp
+from app.bpurl import auth_bp, user_bp, businessCard_bp, digitalAsset_bp, feedback_bp, upload_bp
 
 # 导入路由定义
 # 确保在注册蓝图前导入路由定义
@@ -25,6 +25,7 @@ from app.handler import hd_user
 from app.handler import hd_digital_asset
 from app.handler import hd_businesscard
 from app.handler import hd_feedback
+from app.handler import hd_upload
 
 
 
@@ -33,6 +34,7 @@ app.register_blueprint(user_bp)
 app.register_blueprint(digitalAsset_bp)
 app.register_blueprint(businessCard_bp)
 app.register_blueprint(feedback_bp)
+app.register_blueprint(upload_bp)
 
 # from app import routes  # 导入 API 路由
 
