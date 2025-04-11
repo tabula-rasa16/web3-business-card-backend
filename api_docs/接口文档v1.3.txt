@@ -1,0 +1,572 @@
+
+1. 获取moralis api支持的链列表
+请求路径：http://127.0.0.1:5000/digitalAsset/getSupportedChains
+请求方式：GET
+入参：无
+响应示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "ETH",
+            "id": 1,
+            "key": "eth",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X0",
+            "id": 2,
+            "key": "0x0",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "SEPOLIA",
+            "id": 3,
+            "key": "sepolia",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XAA36A7",
+            "id": 4,
+            "key": "0xaa36a7",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "POLYGON",
+            "id": 5,
+            "key": "polygon",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X89",
+            "id": 6,
+            "key": "0x89",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "BSC",
+            "id": 7,
+            "key": "bsc",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X38",
+            "id": 8,
+            "key": "0x38",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "BSC_TESTNET",
+            "id": 9,
+            "key": "bsc testnet",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X60",
+            "id": 10,
+            "key": "0x60",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "AVALANCHE",
+            "id": 11,
+            "key": "avalanche",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XA86A",
+            "id": 12,
+            "key": "0xa86a",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "FANTOM",
+            "id": 13,
+            "key": "fantom",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XFA",
+            "id": 14,
+            "key": "0xfa",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "PALM",
+            "id": 15,
+            "key": "palm",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X2A05C308D",
+            "id": 16,
+            "key": "0x2a05c308d",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "CRONOS",
+            "id": 17,
+            "key": "cronos",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X09",
+            "id": 18,
+            "key": "0x09",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "ARBITRUM",
+            "id": 19,
+            "key": "arbitrum",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XA4B0",
+            "id": 20,
+            "key": "0xa4b0",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "CHILIZ",
+            "id": 21,
+            "key": "chiliz",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X05B38",
+            "id": 22,
+            "key": "0x05b38",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "CHILIZ_TESTNET",
+            "id": 23,
+            "key": "chiliz testnet",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X05B32",
+            "id": 24,
+            "key": "0x05b32",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "GNOSIS",
+            "id": 25,
+            "key": "gnosis",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X64",
+            "id": 26,
+            "key": "0x64",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "GNOSIS_TESTNET",
+            "id": 27,
+            "key": "gnosis testnet",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X27D8",
+            "id": 28,
+            "key": "0x27d8",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "BASE",
+            "id": 29,
+            "key": "base",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X2005",
+            "id": 30,
+            "key": "0x2005",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "BASE_SEPOLIA",
+            "id": 31,
+            "key": "base sepolia",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X04A34",
+            "id": 32,
+            "key": "0x04a34",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "OPTIMISM",
+            "id": 33,
+            "key": "optimism",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XA",
+            "id": 34,
+            "key": "0xa",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "HOLESKY",
+            "id": 35,
+            "key": "holesky",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X4268",
+            "id": 36,
+            "key": "0x4268",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "POLYGON_AMOY",
+            "id": 37,
+            "key": "polygon amoy",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X03882",
+            "id": 38,
+            "key": "0x03882",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "LINEA",
+            "id": 39,
+            "key": "linea",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XE708",
+            "id": 40,
+            "key": "0xe708",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "MOONBEAM",
+            "id": 41,
+            "key": "moonbeam",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X504",
+            "id": 42,
+            "key": "0x504",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "MOONRIVER",
+            "id": 43,
+            "key": "moonriver",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X505",
+            "id": 44,
+            "key": "0x505",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "MOONBASE",
+            "id": 45,
+            "key": "moonbase",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "X507",
+            "id": 46,
+            "key": "0x507",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "LINEA_SEPOLIA",
+            "id": 47,
+            "key": "linea sepolia",
+            "updated_at": "2025-04-01 20:34:59"
+        },
+        {
+            "created_at": "2025-04-01 20:34:59",
+            "data_status": 0,
+            "descrption": "XE705",
+            "id": 48,
+            "key": "0xe705",
+            "updated_at": "2025-04-01 20:34:59"
+        }
+    ],
+    "message": "Success"
+}
+2.通过moralis api获取用户在某个链上的所有token类型资产
+请求路径：http://127.0.0.1:5000/digitalAsset/getWalletTokens
+请求方式：POST
+入参：
+{
+    "address": "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",      //用户钱包地址   ！必传
+    "chain": "eth",      //链的key，对应接口1中获取到的列表元素的key ！不传
+    "limit": 2        //查询结果限制的个数，，非必传，不传查所有
+}
+响应示例：
+{
+    "code": 200,
+    "data": {
+        "block_number": 22174479,
+        "cursor": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYWdlIjoxLCJwYWdlU2l6ZSI6Miwic25hcHNob3RJZCI6IjBkOGQ3ZGU5LWFjZjctNGRlNC1hMWMyLWM2MGUxNDNjYTQxZCIsImlhdCI6MTc0MzUxNTYwMX0.za4A0DJY90BXk_EDZWwDybjgz9xLv-KBHvWbba5PyV0",
+        "page": 0,
+        "page_size": 2,
+        "result": [
+            {
+                "balance": "10201000000000000",
+                "balance_formatted": "0.010201",
+                "decimals": 18,
+                "logo": "https://cdn.moralis.io/eth/0x.png",
+                "name": "Ether",
+                "native_token": true,
+                "percentage_relative_to_total_supply": null,
+                "portfolio_percentage": 7.177045459324172,
+                "possible_spam": false,
+                "security_score": 99,
+                "symbol": "ETH",
+                "thumbnail": "https://cdn.moralis.io/eth/0x_thumb.png",
+                "token_address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                "total_supply": null,
+                "total_supply_formatted": null,
+                "usd_price": 1876.7155787534648,
+                "usd_price_24hr_percent_change": 2.153065147631649,
+                "usd_price_24hr_usd_change": 39.555258560199945,
+                "usd_value": 19.144375618864096,
+                "usd_value_24hr_usd_change": 0.40350319257259964,
+                "verified_contract": true
+            },
+            {
+                "balance": "85000000000000000",
+                "balance_formatted": "0.085",
+                "decimals": 18,
+                "logo": "https://logo.moralis.io/0x1_0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2_018112a9229b4bf1bf0d042beb7c2c55.png",
+                "name": "Wrapped Ether",
+                "native_token": false,
+                "percentage_relative_to_total_supply": 2.974433014484e-06,
+                "portfolio_percentage": 59.8028491366096,
+                "possible_spam": false,
+                "security_score": 92,
+                "symbol": "WETH",
+                "thumbnail": "https://logo.moralis.io/0x1_0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2_018112a9229b4bf1bf0d042beb7c2c55.png",
+                "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "total_supply": "2857687484845017755375382",
+                "total_supply_formatted": "2857687.484845017755375382",
+                "usd_price": 1876.7155787534648,
+                "usd_price_24hr_percent_change": 2.153065147631649,
+                "usd_price_24hr_usd_change": 39.555258560199945,
+                "usd_value": 159.5208241940445,
+                "usd_value_24hr_usd_change": 3.3621969776169958,
+                "verified_contract": true
+            }
+        ]
+    },
+    "message": "Success"
+}
+
+3.通过moralis api获取用户在某个链上的所有nft类型资产
+路径：http://127.0.0.1:5000/digitalAsset/getWalletNfts
+请求方式：POST
+入参：
+{
+    "address": "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",      //用户钱包地址   ！必传
+    "chain": "eth",      //链的key，对应接口1中获取到的列表元素的key ！不传
+    "limit": 2        //查询结果限制的个数，，非必传，不传查所有
+}
+响应示例：
+{
+    "code": 200,
+    "data": {
+        "cursor": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYWdlIjoxLCJ0b2tlbkFkZHJlc3MiOiIweGU2MTI1OTA5M2E2ZmNjZGM1MDM3YmZiNzdmZTYwOWQ2MGExMGI2YTkiLCJ0b2tlbklkIjoiOCIsImlhdCI6MTc0MzUxNTgwNn0.6bJ39G6P28ru-JVkxGnGjgfhX35r0RUPS26HyDlGfuY",
+        "page": 1,
+        "page_size": 2,
+        "result": [
+            {
+                "amount": "1",
+                "block_number": "18932545",
+                "block_number_minted": null,
+                "collection_banner_image": null,
+                "collection_logo": null,
+                "contract_type": "ERC1155",
+                "floor_price": null,
+                "floor_price_currency": null,
+                "floor_price_usd": null,
+                "last_metadata_sync": "2025-03-20T11:06:32.531Z",
+                "last_token_uri_sync": "2025-03-20T11:06:32.466Z",
+                "list_price": {
+                    "listed": false,
+                    "marketplace": null,
+                    "price": null,
+                    "price_currency": null,
+                    "price_usd": null
+                },
+                "metadata": "{\"name\":\"BAYC apparel badge\",\"description\":\"To increase the diversity of BAYC, the BAYC community has voted to airdrop winter clothing badges to current BAYC holders. If you are a recipient of our airdrop, you will be eligible to mint BAYC winter clothing for free. visit: https://baycapparel.com\",\"image\":\"https://ipfs.io/ipfs/QmSWPL96nLmzypGhjFR6jUvTqw3kHY8TrzSP3YPX8D7CGk\",\"external_url\":\"https://baycapparel.com\"}",
+                "minter_address": "ERC1155 tokens don't have a single minter",
+                "name": "# BAYC apparel badge",
+                "normalized_metadata": {
+                    "animation_url": null,
+                    "attributes": [],
+                    "description": "To increase the diversity of BAYC, the BAYC community has voted to airdrop winter clothing badges to current BAYC holders. If you are a recipient of our airdrop, you will be eligible to mint BAYC winter clothing for free. visit: https://baycapparel.com",
+                    "external_link": null,
+                    "image": "https://ipfs.io/ipfs/QmSWPL96nLmzypGhjFR6jUvTqw3kHY8TrzSP3YPX8D7CGk",
+                    "name": "BAYC apparel badge"
+                },
+                "owner_of": "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",
+                "possible_spam": false,
+                "rarity_label": null,
+                "rarity_percentage": null,
+                "rarity_rank": null,
+                "symbol": "BAYC apparel badge",
+                "token_address": "0xe61259093a6fccdc5037bfb77fe609d60a10b6a9",
+                "token_hash": "cdc016383d1ad3a0047fd1ca9dc1b702",
+                "token_id": "9",
+                "token_uri": "ipfs://QmPtav8zigJdEM11xkKR8m5MHKd4UJLRfXGyiuAhNYEZro",
+                "verified_collection": false
+            },
+            {
+                "amount": "1",
+                "block_number": "18932545",
+                "block_number_minted": null,
+                "collection_banner_image": null,
+                "collection_logo": null,
+                "contract_type": "ERC1155",
+                "floor_price": null,
+                "floor_price_currency": null,
+                "floor_price_usd": null,
+                "last_metadata_sync": "2025-03-20T11:06:32.489Z",
+                "last_token_uri_sync": "2025-03-20T11:06:32.462Z",
+                "list_price": {
+                    "listed": false,
+                    "marketplace": null,
+                    "price": null,
+                    "price_currency": null,
+                    "price_usd": null
+                },
+                "metadata": "{\"name\":\"BAYC apparel badge\",\"description\":\"To increase the diversity of BAYC, the BAYC community has voted to airdrop winter clothing badges to current BAYC holders. If you are a recipient of our airdrop, you will be eligible to mint BAYC winter clothing for free. visit: https://baycapparel.com\",\"image\":\"https://ipfs.io/ipfs/QmSWPL96nLmzypGhjFR6jUvTqw3kHY8TrzSP3YPX8D7CGk\",\"external_url\":\"https://baycapparel.com\"}",
+                "minter_address": "ERC1155 tokens don't have a single minter",
+                "name": "# BAYC apparel badge",
+                "normalized_metadata": {
+                    "animation_url": null,
+                    "attributes": [],
+                    "description": "To increase the diversity of BAYC, the BAYC community has voted to airdrop winter clothing badges to current BAYC holders. If you are a recipient of our airdrop, you will be eligible to mint BAYC winter clothing for free. visit: https://baycapparel.com",
+                    "external_link": null,
+                    "image": "https://ipfs.io/ipfs/QmSWPL96nLmzypGhjFR6jUvTqw3kHY8TrzSP3YPX8D7CGk",
+                    "name": "BAYC apparel badge"
+                },
+                "owner_of": "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",
+                "possible_spam": false,
+                "rarity_label": null,
+                "rarity_percentage": null,
+                "rarity_rank": null,
+                "symbol": "BAYC apparel badge",
+                "token_address": "0xe61259093a6fccdc5037bfb77fe609d60a10b6a9",
+                "token_hash": "96807c99f8bb33dae995445ca7205f91",
+                "token_id": "8",
+                "token_uri": "ipfs://QmPtav8zigJdEM11xkKR8m5MHKd4UJLRfXGyiuAhNYEZro",
+                "verified_collection": false
+            }
+        ],
+        "status": "SYNCED"
+    },
+    "message": "Success"
+}
+

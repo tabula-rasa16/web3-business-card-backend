@@ -1,0 +1,510 @@
+文件模块
+1.上传图片（单张）
+路径：http://127.0.0.1:5000/upload/image
+请求方式：POST
+入参：FormData对象，带有字段image
+例如： const formData = new FormData();
+      formData.append('image', this.imageFile);  // 这个 key 必须为image 
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/upload/image', {
+          method: 'POST',
+          body: formData,
+        });
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "filename": "5b632740dff843668ccf3c23c359a130.png",
+        "url": "uploads\\images\\5b632740dff843668ccf3c23c359a130.png"
+    },
+    "message": "Image uploaded successfully"
+}
+2.批量上传图片
+路径：http://127.0.0.1:5000/upload/images
+请求方式：POST
+入参：FormData对象，带有多个字段images，要上传几张图就有多少个images字段
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "uploaded": [
+            {
+                "filename": "8dba4539bee647f7ac2c70c54e72088d.png",
+                "url": "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png"
+            },
+            {
+                "filename": "7f06e0c8b1e046f2b522cac8d9dbecc5.jpg",
+                "url": "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+            }
+        ]
+    },
+    "message": "Images uploaded successfully"
+}
+3.上传视频（单个）
+路径：http://127.0.0.1:5000/upload/video
+请求方式：POST
+入参：FormData对象，带有字段video
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "filename": "3eaf939e398c4229bea453c09500a482.mkv",
+        "url": "/uploads/videos/3eaf939e398c4229bea453c09500a482.mkv"
+    },
+    "message": "Video uploaded successfully"
+}
+4.回传图片/视频（用于前端展示）
+路径：http://127.0.0.1:5000/download/<fileurl>  fileurl即为上面接口响应返回的url,例如：http://127.0.0.1:5000/download/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg
+请求方式：GET
+入参：无
+返回示例：文件本身
+
+用户关注模块
+1.关注用户
+路径：http://127.0.0.1:5000/user/follow
+请求方式：POST
+入参：
+{
+    "follower_id": 6,      #必传！为关注发起者用户id
+    "following_id": 1    #必传！为被关注用户id
+}
+返回示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Follow user Success"
+}
+2.获取关注用户列表
+路径：http://127.0.0.1:5000/user/getFollowings?user_id=1
+请求方式：GET
+入参：user_id  为当前用户的id
+返回示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "avatar_url": null,
+            "bio": "这是修改后的简介",
+            "created_at": "2025-04-09 15:26:16",
+            "following_id": 5,
+            "id": 1,
+            "username": "王五"
+        },
+        {
+            "avatar_url": null,
+            "bio": null,
+            "created_at": "2025-04-09 15:28:15",
+            "following_id": 6,
+            "id": 2,
+            "username": "测试用户1"
+        }
+    ],
+    "message": "Get User followings Success"
+}
+
+3.获取粉丝列表
+路径：http://127.0.0.1:5000/user/getFollowers?user_id=1
+请求方式：GET
+入参：user_id 为当前用户的id
+返回示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "avatar_url": null,
+            "bio": null,
+            "created_at": "2025-04-09 15:31:07",
+            "follower_id": 6,
+            "id": 3,
+            "username": "测试用户1"
+        }
+    ],
+    "message": "Get User followers Success"
+}
+
+4.获取两个用户之间的关注关系（用于前端展示“已关注”/“未关注”/“已互粉”/“回关”等）
+路径：http://127.0.0.1:5000/user/followRelation
+请求方式：POST
+入参：
+{
+    "subject_id": 6,    #必传！为当前用户id
+    "object_id": 1     #必传！为客体用户id
+}
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "follow_relation": 3           # follow_relation有以下几种值：
+				1：已关注（当前用户已关注客体用户，但客体用户为关注当前用户）
+				2：未关注（两者均为关注对方）
+				3：互相关注
+				4：待回关（客体用户关注了当前用户，但当前用户尚未关注客体用户）
+
+    },
+    "message": "Get follow relation Success"
+}
+
+5.取消关注
+路径：http://127.0.0.1:5000/user/unfollow
+请求方式：POST
+入参：
+{
+    "follower_id": 6,  #必传！当前用户id
+    "following_id": 1  #必传！对象用户id
+}
+返回示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Unfollow user Success"
+}
+
+贴子模块
+1.新建帖子
+路径：http://127.0.0.1:5000/post/create
+请求方式：POST
+入参：{
+    "user_id": 5,  #必传！发帖人user_id
+    "content": "测试贴子1",        #必传！文字内容
+    "media_url": "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png,/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"  #非必传，媒体内容（图片支持多张/视频），多张图片的相对路径间以,分割，拼接成一个字符串传
+}
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "post_id": 3
+    },
+    "message": "Post created Success"
+}
+2.获取用户发布过的贴子列表
+路径：http://127.0.0.1:5000/post/list?user_id=5
+请求方式：GET
+入参：user_id
+返回示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "content": "测试贴子2",
+            "created_at": "2025-04-11 15:08:40",
+            "data_status": 0,
+            "id": 3,
+            "media_url": [
+                "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png",
+                "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+            ],
+            "updated_at": "2025-04-11 15:08:40",
+            "user_id": 5
+        },
+        {
+            "content": "测试贴子1",
+            "created_at": "2025-04-11 15:03:00",
+            "data_status": 0,
+            "id": 1,
+            "media_url": [
+                "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png",
+                "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+            ],
+            "updated_at": "2025-04-11 15:03:00",
+            "user_id": 5
+        }
+    ],
+    "message": "Get post list success"
+}
+3.根据贴子id获取单个贴子（包括一级评论与点赞列表）
+路径：http://127.0.0.1:5000/post/getRecord?id=3
+请求方式：GET
+入参：id
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "comments": [
+            {
+                "avatar_url": null,
+                "content": "我去，有点东西！",
+                "created_at": "2025-04-11 15:56:17",
+                "id": 4,
+                "user_id": 6,
+                "user_name": "测试用户1"
+            },
+            {
+                "avatar_url": "https://th.bing.com/th/id/OIP.7GLMYPqMlt2LgkbPsOnDIAAAAA?rs=1&pid=ImgDetMain",
+                "content": "你的贴子太棒了！",
+                "created_at": "2025-04-11 15:50:29",
+                "id": 2,
+                "user_id": 1,
+                "user_name": "张三"
+            }
+        ],
+        "likes": [
+            {
+                "created_at": "2025-04-11 15:36:11",
+                "id": 2,
+                "user_id": 5,
+                "username": "王五"
+            },
+            {
+                "created_at": "2025-04-11 15:34:48",
+                "id": 1,
+                "user_id": 1,
+                "username": "张三"
+            }
+        ],
+        "post": {
+            "content": "测试贴子2",
+            "created_at": "2025-04-11 15:08:40",
+            "data_status": 0,
+            "id": 3,
+            "media_url": [
+                "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png",
+                "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+            ],
+            "updated_at": "2025-04-11 15:08:40",
+            "user_id": 5
+        }
+    },
+    "message": "Get post success"
+}
+
+
+
+4.删除贴子
+路径：http://127.0.0.1:5000/post/delete
+请求方式：POST
+入参：
+{
+    "id": 2
+}
+返回示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Post delete Success"
+}
+
+5.获取朋友圈
+路径：http://127.0.0.1:5000/post/getMoments
+请求方式：POST
+入参：{
+    "user_id": 1,    #必传！当前用户id
+    "page_num": 1,     #必传！分页设置，当前页的页码
+    "page_size": 10      #非必传，分页设置，每页展示的贴子数，不传为默认值10
+}
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "current_page": 1,
+        "is_last_page": true,
+        "moments": [
+            {
+                "content": "测试贴子2",
+                "created_at": "2025-04-11 15:08:40",
+                "data_status": 0,
+                "id": 3,
+                "media_url": [
+                    "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png",
+                    "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+                ],
+                "updated_at": "2025-04-11 15:08:40",
+                "user_id": 5
+            },
+            {
+                "content": "测试贴子2",
+                "created_at": "2025-04-11 15:03:54",
+                "data_status": 0,
+                "id": 2,
+                "media_url": [
+                    "/uploads/videos/3eaf939e398c4229bea453c09500a482.mkv"
+                ],
+                "updated_at": "2025-04-11 15:22:25",
+                "user_id": 6
+            },
+            {
+                "content": "测试贴子1",
+                "created_at": "2025-04-11 15:03:00",
+                "data_status": 0,
+                "id": 1,
+                "media_url": [
+                    "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png",
+                    "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+                ],
+                "updated_at": "2025-04-11 15:03:00",
+                "user_id": 5
+            }
+        ],
+        "page_size": 10
+    },
+    "message": "Get moments success"
+}
+
+6.点赞贴子
+路径：http://127.0.0.1:5000/post/like
+请求方式：POST
+入参：
+{
+    "user_id": 1,     #必传！
+    "post_id": 3      #必传！
+}
+返回示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Like post success"
+}
+
+7.取消点赞
+路径：http://127.0.0.1:5000/post/unlike
+请求方式：POST
+入参：
+{
+    "user_id": 1,     #必传！
+    "post_id": 3      #必传！
+}
+返回示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Unlike post success"
+}
+8.获取曾赞过的贴子
+路径：http://127.0.0.1:5000/post/getLikedPosts?user_id=1
+请求方式：GET
+入参：user_id
+返回示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "avatar_url": null,
+            "content": "测试贴子2",
+            "created_at": "2025-04-11 15:39:47",
+            "id": 3,
+            "media_url": [
+                "/uploads/videos/3eaf939e398c4229bea453c09500a482.mkv"
+            ],
+            "post_id": 2,
+            "user_id": 6,
+            "username": "测试用户1"
+        },
+        {
+            "avatar_url": null,
+            "content": "测试贴子2",
+            "created_at": "2025-04-11 15:34:48",
+            "id": 1,
+            "media_url": [
+                "/uploads/images/8dba4539bee647f7ac2c70c54e72088d.png",
+                "/uploads/images/7f06e0c8b1e046f2b522cac8d9dbecc5.jpg"
+            ],
+            "post_id": 3,
+            "user_id": 5,
+            "username": "王五"
+        }
+    ],
+    "message": "Get liked posts success"
+}
+
+
+评论模块
+1.创建评论
+路径：http://127.0.0.1:5000/comment/create
+请求方式：POST
+入参：
+如果是一级评论：
+{
+    "user_id": 1,   #必传
+    "post_id": 3,     #必传
+    "content": "你的贴子太棒了！"     #必传
+}
+如果是对评论的回复：
+{
+    "user_id": 5,     #必传
+    "post_id": 3,        #必传
+    "content": "谢谢！",       #必传
+    "parent_id": 2       #为对象评论的id
+}
+
+返回示例：
+{
+    "code": 200,
+    "data": {
+        "comment_id": 2
+    },
+    "message": "Comment created Success"
+}
+2.获取用户发布过的评论列表
+路径：http://127.0.0.1:5000/comment/list?user_id=5
+请求方式：GET
+入参：user_id
+返回示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "avatar_url": null,
+            "content": "哈哈哈哈，测试用户1你好啊",
+            "created_at": "2025-04-11 15:57:05",
+            "id": 5,
+            "post_content": "测试贴子2",
+            "post_id": 3,
+            "user_id": 5,
+            "user_name": "王五"
+        },
+        {
+            "avatar_url": null,
+            "content": "谢谢！",
+            "created_at": "2025-04-11 15:52:24",
+            "id": 3,
+            "post_content": "测试贴子2",
+            "post_id": 3,
+            "user_id": 5,
+            "user_name": "王五"
+        }
+    ],
+    "message": "Get comment list success"
+}
+3.根据评论id获取其回复列表
+路径：http://127.0.0.1:5000/comment/getChildren?id=4
+请求方式：GET
+入参：id      #评论id
+返回示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "avatar_url": null,
+            "content": "你最近怎么样？",
+            "created_at": "2025-04-11 16:01:26",
+            "id": 6,
+            "user_id": 5,
+            "user_name": "王五"
+        },
+        {
+            "avatar_url": null,
+            "content": "哈哈哈哈，测试用户1你好啊",
+            "created_at": "2025-04-11 15:57:05",
+            "id": 5,
+            "user_id": 5,
+            "user_name": "王五"
+        }
+    ],
+    "message": "Get children comments success"
+}
+
+4. 删除评论（级联删除）
+路径：http://127.0.0.1:5000/comment/delete
+请求方式：POST
+入参：
+{
+    "id": 4       #评论id，必传！
+}
+返回示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Comment delete Success"
+}
+
+

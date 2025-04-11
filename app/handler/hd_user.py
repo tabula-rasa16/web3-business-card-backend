@@ -3,6 +3,7 @@ from app import app
 import app.models.users as users_db
 # import models.business_card as business_card_db
 from app.common.tools import response,params_preprocess
+from app.common.const import *
 
 # import random
 from flask import Blueprint, request, jsonify
@@ -86,3 +87,79 @@ def delete_user():
     data = params_preprocess(data)
     users_db.delete_user(data['user_id'])
     return response(code=200, message="User deleted Success")
+
+
+
+# 用户关注相关
+# 获取用户的关注列表
+@user_bp.route('/getFollowings', methods=['GET'])
+# @jwt_required()
+def get_followings():
+    user_id = request.args.get("user_id")
+
+    if not user_id:
+        return response(code=400, message="User ID is required")
+    
+    followings = users_db.get_followings_by_follower_id(user_id)
+    return response(data=followings,message="Get User followings Success")
+
+# 获取用户的粉丝列表
+@user_bp.route('/getFollowers', methods=['GET'])
+# @jwt_required()
+def get_followers():
+    user_id = request.args.get("user_id")
+    if not user_id:
+        return response(code=400, message="User ID is required")
+
+    followers = users_db.get_followers_by_following_id(user_id)
+    return response(data=followers, message="Get User followers Success")
+
+# 关注用户
+@user_bp.route('/follow', methods=['POST'])
+# @jwt_required()
+@require("follower_id", "following_id")
+def follow_user():
+    data = request.json
+    data = params_preprocess(data)
+
+    # 检查之前是否已关注过
+    if users_db.get_follow_by_two_ids(data['follower_id'], data['following_id']):
+        return response(code=400, message="Already followed")
+    # 添加关注关系
+    users_db.add_follow(data['follower_id'], data['following_id'])
+    return response(code=200, message="Follow user Success")
+
+# 取消关注用户
+@user_bp.route('/unfollow', methods=['POST'])
+# @jwt_required()
+@require("follower_id", "following_id")
+def unfollow_user():
+    data = request.json
+    data = params_preprocess(data)
+    users_db.delete_follow(data['follower_id'], data['following_id'])
+    return response(code=200, message="Unfollow user Success")
+
+# 获取两个用户之间的关注关系（用于前端展示“已关注”/“未关注”/“已互粉”/“回关”等）
+@user_bp.route('/followRelation', methods=['POST'])
+# @jwt_required()
+@require("subject_id", "object_id")
+def get_follow_relation():
+    data = request.json
+    data = params_preprocess(data)
+    subject_follow_object = users_db.get_follow_by_two_ids(data['subject_id'], data['object_id']) #主体是否关注客体
+    object_follow_subject = users_db.get_follow_by_two_ids(data['object_id'], data['subject_id']) #客体是否关注主体
+
+    if subject_follow_object and object_follow_subject:
+        follow_relation = USER_FOLLOW_STATUS_MUTUAL
+    elif subject_follow_object:
+        follow_relation = USER_FOLLOW_STATUS_FOLLOWED
+    elif object_follow_subject:
+        follow_relation = USER_FOLLOW_STATUS_FOLLOWBACK
+    else:
+        follow_relation = USER_FOLLOW_STATUS_UNFOLLOWED
+    
+    result = {
+        "follow_relation": follow_relation
+    }
+
+    return response(data=result, message="Get follow relation Success")

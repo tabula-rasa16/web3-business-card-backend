@@ -1,0 +1,362 @@
+用户钱包签名登录模块
+1.获取Nonce
+路径：http://127.0.0.1:5000/auth/getNonce?address=0x2F2aCcF905b2Af0dFd448B9c816754f411A6DEB3
+请求方式: GET
+请求参数：address
+相应数据：{
+    "code": 200,
+    "data": {
+        "nonce": "请签名以登录: 348241"
+    },
+    "message": "Success"
+}
+2.验证签名
+路径：http://127.0.0.1:5000/auth/verifySignature
+请求方式: POST
+请求参数：
+{
+    "address": "0x2F2aCcF905b2Af0dFd448B9c816754f411A6DEB3",
+    "signature": "12345"
+}
+相应数据：{
+    "code": 200,
+    "data": {
+        "token": "aodidqpwidhqpfoqjfp"
+    },
+    "message": "Success"
+}
+用户模块
+1.获取所有用户
+路径：http://127.0.0.1:5000/user/getAll
+请求方法：GET
+请求参数：无
+响应数据：
+{
+    "code": 200,
+    "data": [
+        {
+            "avatar_url": "https://th.bing.com/th/id/OIP.7GLMYPqMlt2LgkbPsOnDIAAAAA?rs=1&pid=ImgDetMain",
+            "bio": "这里是我的个人简介",
+            "created_at": "2025-03-12 19:28:43",
+            "data_status": 0,
+            "gender": "male",
+            "id": 1,
+            "updated_at": "2025-03-12 19:28:43",
+            "username": "张三",
+            "wallet_address": "0x2F2aCcF905b2Af0dFd448B9c816754f411A6DEB3"
+        },
+        {
+            "avatar_url": null,
+            "bio": "这是修改后的简介",
+            "created_at": "2025-03-12 19:50:49",
+            "data_status": 0,
+            "gender": null,
+            "id": 5,
+            "updated_at": "2025-03-12 20:30:30",
+            "username": "王五",
+            "wallet_address": "0xCDD52806557259B590FB07273933dDdD76d0C43A"
+        }
+    ],
+    "message": "Success"
+}
+2.创建用户
+路径：http://127.0.0.1:5000/user/create
+请求方法：POST
+请求参数：
+{
+    "wallet_address": "0xCDD52806557259B590FB07273933dDdD76d0C43A",       ！！必传项
+    "username": "李四",    ！！必传项
+    "gender": "female"，      #枚举类型，只能为male,female,other这三个字符串中的一种
+    "avatar_url": "https://adac.com"  #头像链接
+    "bio": "这是自我简介"
+}
+响应数据：
+{
+    "code": 200,
+    "data": null,
+    "message": "User created Success"
+}
+3.根据用户钱包地址返回用户id
+路径：http://127.0.0.1:5000/user/getIdByAddress
+请求方法：POST
+请求参数：
+{
+      "wallet_address": "0xCDD52806557259B590FB07273933dDdD76d0C43A"  !!必传
+}
+响应数据：
+{
+    "code": 200,
+    "data": {
+        "id": 5
+    },
+    "message": "Success"
+}
+4.获取用户的个人信息
+路径：http://127.0.0.1:5000/user/baseinfo?user_id=1
+请求方法：GET
+请求参数：user_id
+响应数据：
+{
+    "code": 200,
+    "data": {
+        "avatar_url": "https://th.bing.com/th/id/OIP.7GLMYPqMlt2LgkbPsOnDIAAAAA?rs=1&pid=ImgDetMain",
+        "bio": "这里是我的个人简介",
+        "created_at": "2025-03-12 19:28:43",
+        "data_status": 0,
+        "gender": "male",
+        "id": 1,
+        "updated_at": "2025-03-12 19:28:43",
+        "username": "张三",
+        "wallet_address": "0x2F2aCcF905b2Af0dFd448B9c816754f411A6DEB3"
+    },
+    "message": "Success"
+}
+5.修改个人信息
+路径：http://127.0.0.1:5000/user/update
+请求方法：POST
+请求参数：
+{
+    "user_id": 5,      !!必传
+    "username": "王五",    !!必传
+    "gender": "female"，#枚举类型，只能为male,female,other这三个字符串中的一种
+    "avatar_url": "https://adac.com" 
+    "bio": "这是修改后的简介"
+}
+响应数据：
+{
+    "code": 200,
+    "data": null,
+    "message": "User updated Success"
+}
+6.删除用户
+路径：http://127.0.0.1:5000/user/delete
+请求方式：POST
+请求参数：
+{
+    "user_id": 5
+}
+响应数据：
+{
+    "code": 200,
+    "data": null,
+    "message": "User deleted Success"
+}
+
+名片模块
+1.获取社交媒体列表（用于动态表单构建）
+路径：http://127.0.0.1:5000/businessCard/getSocialMedia
+请求方式：GET
+请求参数：无
+响应数据：
+{
+    "code": 200,
+    "data": [
+        {
+            "app_key": null,
+            "app_name": "twitter",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 1,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "linkedin",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 2,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "github",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 3,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "wechat",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 4,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "telegram",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 5,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "facebook",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 6,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "instagram",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 7,
+            "remark": null,
+            "style": null
+        },
+        {
+            "app_key": null,
+            "app_name": "other",
+            "app_type": null,
+            "created_at": "2025-03-12 15:30:27",
+            "creator": null,
+            "data_status": 0,
+            "id": 8,
+            "remark": null,
+            "style": null
+        }
+    ],
+    "message": "Success"
+}
+2.创建名片
+路径：http://127.0.0.1:5000/businessCard/create
+请求方式：POST
+请求参数：
+{
+    "user_id": 1,      !!必传
+    "display_name": "张三的名片",   !!必传
+    "company": "Debox", 
+    "job_title": "项目经理", 
+    "website_url": "https://www.baidu.com", 
+    "portfolio_url": "https://a.520gexing.com/uploads/allimg/2021042109/uqaqhuvavt0.jpg", 
+    "debox_account": "1q2we",    !!必传
+    "email": "123456@qq.com", 
+    "phone": "+86 13823456780",
+    "social_account_list": [
+        {
+            "platform": "twitter",     #枚举类型，只能是字符串'twitter','linkedin','github','wechat','telegram','facebook','instagram','other'中的一个
+            "account_handle": "@user1",
+            "profile_url": "https://twitter.com/user1"
+        },
+        {
+            "platform": "github",   #枚举类型，只能是字符串'twitter','linkedin','github','wechat','telegram','facebook','instagram','other'中的一个
+            "account_handle": "user1",
+            "profile_url": "https://github.com/user1"
+        }
+    ]
+}
+响应数据：
+{
+    "code": 200,
+    "data": {
+        "card_id": 3
+    },
+    "message": "Create business card successfully"
+}
+3.查看自己的名片
+路径：http://127.0.0.1:5000/businessCard/getcard?user_id=1
+请求方式：GET
+请求参数：user_id
+响应数据：
+{
+    "code": 200,
+    "data": {
+        "business_card_base_info": [
+            {
+                "company": "Debox",
+                "created_at": "2025-03-12 21:03:04",
+                "data_status": 0,
+                "debox_account": "1q2we",
+                "display_name": "张三的名片",
+                "email": "123456@qq.com",
+                "id": 2,
+                "job_title": "项目经理",
+                "phone": "+86 13823456780",
+                "portfolio_url": "https://a.520gexing.com/uploads/allimg/2021042109/uqaqhuvavt0.jpg",
+                "updated_at": "2025-03-12 21:03:04",
+                "user_id": 1,
+                "website_url": "https://www.baidu.com"
+            }
+        ],
+        "social_accounts": [
+            {
+                "account_handle": "@user1",
+                "created_at": "2025-03-12 21:03:04",
+                "id": 1,
+                "platform": "twitter",
+                "profile_url": "https://twitter.com/user1"
+            },
+            {
+                "account_handle": "user1",
+                "created_at": "2025-03-12 21:03:04",
+                "id": 2,
+                "platform": "github",
+                "profile_url": "https://github.com/user1"
+            }
+        ]
+    },
+    "message": "Success"
+}
+4.编辑名片(更新信息)
+路径：http://127.0.0.1:5000/businessCard/update
+请求方式：POST
+请求参数：
+{
+    "id": 2,     #名片id   !!必传
+    "user_id": 1,   !!必传
+    "display_name": "张三的名片-改",   !!必传
+    "company": "Debox", 
+    "job_title": "项目经理", 
+    "website_url": "https://www.baidu.com", 
+    "portfolio_url": "https://a.520gexing.com/uploads/allimg/2021042109/uqaqhuvavt0.jpg", 
+    "debox_account": "1q2we",       !!必传
+    "email": "123456@qq.com", 
+    "phone": "+86 13823456780",
+    "social_account_list": [
+        {
+            "platform": "wechat",    #枚举类型，只能是字符串'twitter','linkedin','github','wechat','telegram','facebook','instagram','other'中的一个
+            "account_handle": "user1",
+            "profile_url": "https://wechat.com/user1"
+        },
+        {
+            "platform": "github",   #枚举类型，只能是字符串'twitter','linkedin','github','wechat','telegram','facebook','instagram','other'中的一个
+            "account_handle": "user1",
+            "profile_url": "https://github.com/user1"
+        },
+        {
+            "platform": "telegram",   #枚举类型，只能是字符串'twitter','linkedin','github','wechat','telegram','facebook','instagram','other'中的一个
+            "account_handle": "user1-t",
+            "profile_url": "https://telegram.com/user1"
+        }
+    ]
+}
+响应数据：
+{
+    "code": 200,
+    "data": null,
+    "message": "Update business card successfully"
+}

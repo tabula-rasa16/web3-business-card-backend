@@ -1,0 +1,404 @@
+名片模块：
+1.分享名片接口
+路径：http://127.0.0.1:5000/businessCard/share
+请求方式：POST
+入参：{
+    "id": 3 #名片id，必传
+}
+响应示例：
+{
+    "code": 200,
+    "data": {
+        "share_url": "http://localhost:5000/shared_card?share_token=97840ca0-a134-4cd9-8ec7-f8ff37f06afe"
+    },
+    "message": "Share business card successfully"
+}
+
+2.通过链接查看分享的名片
+路径：http://127.0.0.1:5000/businessCard/shared_card?share_token=97840ca0-a134-4cd9-8ec7-f8ff37f06afe(上个接口返回的share_url即为请求路径)
+请求方式：GET
+入参：share_token
+响应示例：
+{
+    "code": 200,
+    "data": {
+        "business_card_base_info": {
+            "company": "百度",
+            "created_at": "2025-03-14 15:01:23",
+            "data_status": 0,
+            "debox_account": "1q2we",
+            "display_name": "王五的名片",
+            "email": "546789@qq.com",
+            "id": 3,
+            "job_title": "工程师",
+            "phone": "+65 83941234",
+            "portfolio_url": "https://a.520gexing.com/uploads/allimg/2021042109/uqaqhuvavt0.jpg",
+            "updated_at": "2025-03-22 16:01:44",
+            "user_id": 5,
+            "website_url": "https://www.baidu.com"
+        },
+        "digital_assets": [
+            {
+                "amount": "1.0000000000",
+                "asset_metadata": "{\"image\": \"https://example.com/nft-image.png\", \"attributes\": [{\"value\": \"Blue\", \"trait_type\": \"Background\"}, {\"value\": \"Cowboy Hat\", \"trait_type\": \"Hat\"}], \"description\": \"A rare NFT collectible\"}",
+                "asset_type": "NFT",
+                "contract_address": "0xNFTContractAddress",
+                "created_at": "2025-03-22 18:21:19",
+                "display_order": 10,
+                "id": 6,
+                "is_display": 1,
+                "name": "Cool NFT",
+                "token_id": "9876",
+                "user_id": 5
+            }
+        ],
+        "social_accounts": [
+            {
+                "account_handle": "@user2",
+                "created_at": "2025-03-14 15:01:23",
+                "id": 9,
+                "platform": "twitter",
+                "profile_url": "https://twitter.com/user2"
+            },
+            {
+                "account_handle": "user2",
+                "created_at": "2025-03-14 15:01:23",
+                "id": 10,
+                "platform": "github",
+                "profile_url": "https://github.com/user2"
+            }
+        ]
+    },
+    "message": "Get shared business card successfully"
+}
+
+3.收藏别人分享的名片
+路径：http://127.0.0.1:5000/businessCard/collect
+请求方式：POST
+入参：
+{
+    "owner_id": 1,  #当前用户id  ！必传
+    "card_id": 3   #名片id ！必传
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Collect business card successfully"
+}
+
+4.获取收藏夹内的名片
+路径：http://127.0.0.1:5000/businessCard/collectionList?user_id=1
+请求方式：GET
+入参：user_id
+响应示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "added_at": "2025-03-22 18:50:47",
+            "avatar_url": null,
+            "company": "百度",
+            "debox_account": "1q2we",
+            "display_name": "王五的名片",
+            "id": 3,
+            "phone": "+65 83941234",
+            "share_token": "97840ca0-a134-4cd9-8ec7-f8ff37f06afe",
+            "shared_status": 0
+        }
+    ],
+    "message": "Get collection list successfully"
+}
+
+5.取消收藏
+路径：http://127.0.0.1:5000/businessCard/cancelCollect
+请求方式：POST
+入参：
+{
+    "owner_id": 1,         必传
+    "card_id": 3      必传
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Cancel collect business card successfully"
+}
+
+用户反馈模块
+1.创建用户反馈
+路径：http://127.0.0.1:5000/feedback/create
+请求方法：POST
+入参：
+{
+    "user_id": 5,        #必传
+    "feedback_content": "这是用户的反馈内容",
+    "rel_record_id": "",    #这个设计为关联的流水号，目前没有用，传参时该字段可以删除
+    "satisfaction": 1       #用户满意度1-5
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Feedback created Success"
+}
+2. 获取某用户创建过的反馈列表
+路径： http://127.0.0.1:5000/feedback/list?user_id=5
+请求方法：GET
+入参：user_id
+响应示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "create_time": "2025-03-22 16:26:01",
+            "data_status": 0,
+            "feedback_content": "测试1",
+            "handle_status": 0,  #处理状态：0待处理，1处理完成，2已撤销
+            "id": 2,
+            "job_number": null,
+            "rel_record_id": null,
+            "rel_user_id": 5,
+            "remark": null,
+            "satisfaction": 3,
+            "update_time": "2025-03-22 16:26:01"
+        },
+        {
+            "create_time": "2025-03-22 16:17:20",
+            "data_status": 0,
+            "feedback_content": "这是用户的反馈内容",
+            "handle_status": 0, #处理状态：0待处理，1处理完成，2已撤销
+            "id": 1,
+            "job_number": null,
+            "rel_record_id": null,
+            "rel_user_id": 5,
+            "remark": null,
+            "satisfaction": 1,
+            "update_time": "2025-03-22 16:17:20"
+        }
+    ],
+    "message": "Success"
+}
+3.根据id获取单条反馈内容
+路径：http://127.0.0.1:5000/feedback/getRecord?id=2
+请求方法：GET
+入参：id
+响应示例：
+{
+    "code": 200,
+    "data": {
+        "create_time": "2025-03-22 16:26:01",
+        "data_status": 0,
+        "feedback_content": "测试1",
+        "handle_status": 0, #处理状态：0待处理，1处理完成，2已撤销
+        "id": 2,
+        "job_number": null,
+        "rel_record_id": null,
+        "rel_user_id": 5,
+        "remark": null,
+        "satisfaction": 3,
+        "update_time": "2025-03-22 16:26:01"
+    },
+    "message": "Success"
+}
+4.撤销反馈
+路径：http://127.0.0.1:5000/feedback/revoke
+请求方法：POST
+入参：
+{
+    "id": 1
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Feedback revoked Success"
+}
+
+数字资产模块
+1.创建数字资产记录
+路径：http://127.0.0.1:5000/digitalAsset/create
+请求方式：POST
+入参：
+{
+    "user_id": 5,       ！！必传
+    "asset_type": "TOKEN",      ！！必传，枚举类型，只能是TOKEN，NFT，OTHER这三种字符串的一种
+    "contract_address": "0xTokenAddress",  ！！必传
+    "name": "USDC", 
+    "token_id": 1234, 
+    "amount": 19483913, 
+    "asset_metadata": {
+        "symbol": "USDC",
+        "decimals": 6,
+        "logo": "https://example.com/usdc-logo.png",
+        "network": "Ethereum"
+    },   #！！这个asset_metadata如果没有就不要传这个字段
+    "is_display": 0, 
+    "display_order": 0
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Create digital asset successfully"
+}
+2.批量创建数字资产记录
+路径：http://127.0.0.1:5000/digitalAsset/batchCreate
+请求方式：POST
+入参：
+{
+    "asset_list": [
+        {
+            "user_id": 5, 
+            "asset_type": "TOKEN", 
+            "contract_address": "0xTokenAddress3",
+            "name": "SOL", 
+            "token_id": 3468, 
+            "amount": 19483913, 
+            "asset_metadata": {
+                "symbol": "SOL",
+                "decimals": 6,
+                "logo": "https://example.com/sol-logo.png",
+                "network": "Ethereum"
+            }, 
+            "is_display": 0, 
+            "display_order": 0
+        },
+        {
+            "user_id": 5, 
+            "asset_type": "NFT", 
+            "contract_address": "0xNFTContractAddress",
+            "name": "Cool NFT", 
+            "token_id": 9876, 
+            "amount": 1, 
+            "asset_metadata": {
+                "image": "https://example.com/nft-image.png",
+                "description": "A rare NFT collectible",
+                "attributes": [
+                    {"trait_type": "Background", "value": "Blue"},
+                    {"trait_type": "Hat", "value": "Cowboy Hat"}
+                ]
+            }, 
+            "is_display": 1, 
+            "display_order": 10
+        }
+    ]
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Batch create digital asset successfully"
+}
+3.获取用户账户下的所有数字资产
+路径：http://127.0.0.1:5000/digitalAsset/get?user_id=5&is_display=0
+请求方式：GET
+入参：user_id  #必传
+is_display #非必传，不传查全部；传0查未选择展示的；传1查选择展示的
+响应示例：
+{
+    "code": 200,
+    "data": [
+        {
+            "amount": "19483913.0000000000",
+            "asset_metadata": "{\"logo\": \"https://example.com/usdc-logo.png\", \"symbol\": \"USDC\", \"network\": \"Ethereum\", \"decimals\": 6}",
+            "asset_type": "TOKEN",
+            "contract_address": "0xTokenAddress",
+            "created_at": "2025-03-22 17:00:00",
+            "display_order": 0,
+            "id": 1,
+            "is_display": 0,
+            "name": "USDC",
+            "token_id": "1234",
+            "user_id": 5
+        },
+        {
+            "amount": "19483913.0000000000",
+            "asset_metadata": null,
+            "asset_type": "TOKEN",
+            "contract_address": "0xTokenAddress2",
+            "created_at": "2025-03-22 17:04:24",
+            "display_order": 0,
+            "id": 2,
+            "is_display": 0,
+            "name": "USDT",
+            "token_id": "1234",
+            "user_id": 5
+        },
+        {
+            "amount": "19483913.0000000000",
+            "asset_metadata": "{\"logo\": \"https://example.com/sol-logo.png\", \"symbol\": \"SOL\", \"network\": \"Ethereum\", \"decimals\": 6}",
+            "asset_type": "TOKEN",
+            "contract_address": "0xTokenAddress3",
+            "created_at": "2025-03-22 18:01:18",
+            "display_order": 0,
+            "id": 3,
+            "is_display": 0,
+            "name": "SOL",
+            "token_id": "3468",
+            "user_id": 5
+        }
+    ],
+    "message": "Get digital asset successfully"
+}
+4.批量更新数字资产
+路径：http://127.0.0.1:5000/digitalAsset/batchUpdate
+请求方式：POST
+入参：
+{
+    "asset_list": [
+        {
+            "user_id": 5, 
+            "asset_type": "TOKEN", 
+            "contract_address": "0xTokenAddress3",
+            "name": "SOL", 
+            "token_id": 3468, 
+            "amount": 19483913, 
+            "asset_metadata": {
+                "symbol": "SOL",
+                "decimals": 6,
+                "logo": "https://example.com/sol-logo.png",
+                "network": "Ethereum"
+            }, 
+            "is_display": 0, 
+            "display_order": 0
+        },
+        {
+            "user_id": 5, 
+            "asset_type": "NFT", 
+            "contract_address": "0xNFTContractAddress",
+            "name": "Cool NFT", 
+            "token_id": 9876, 
+            "amount": 1, 
+            "asset_metadata": {
+                "image": "https://example.com/nft-image.png",
+                "description": "A rare NFT collectible",
+                "attributes": [
+                    {"trait_type": "Background", "value": "Blue"},
+                    {"trait_type": "Hat", "value": "Cowboy Hat"}
+                ]
+            }, 
+            "is_display": 1, 
+            "display_order": 10
+        }
+    ]
+}
+响应示例：
+{
+    "code": 200,
+    "data": null,
+    "message": "Batch update digital asset successfully"
+}
+5.删除某用户的全部数字资产记录
+路径：http://127.0.0.1:5000/digitalAsset/delete
+请求方式：POST
+入参：
+{
+    "user_id": 5
+}
+响应数据：
+{
+    "code": 200,
+    "data": null,
+    "message": "Delete digital asset successfully"
+}
