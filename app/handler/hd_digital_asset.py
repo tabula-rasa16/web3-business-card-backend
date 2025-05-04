@@ -64,7 +64,7 @@ def get_nfts():
 # 在库中创建数字资产记录
 @digitalAsset_bp.route('/create', methods=['POST'])
 # @jwt_required
-@require("user_id","asset_type","contract_address")
+@require("user_id","asset_type","contract_address","chain")
 def create_digital_asset():
     data = request.json
     data = params_preprocess(data)
@@ -72,7 +72,7 @@ def create_digital_asset():
     if data.get("asset_metadata"):
         data["asset_metadata"] = json.dumps(data["asset_metadata"])
     # 创建数字资产记录
-    result = digital_assets_db.add_digital_asset(data["user_id"],data["asset_type"],data["contract_address"],data.get("name"),data.get("token_id"),data.get("amount"),data.get("asset_metadata"),data.get("is_display"),data.get("display_order"))
+    result = digital_assets_db.add_digital_asset(data["user_id"],data["asset_type"],data["contract_address"],data["chain"],data.get("name"),data.get("token_id"),data.get("amount"),data.get("asset_metadata"),data.get("is_display"),data.get("display_order"))
     return response(message="Create digital asset successfully")
 
 # 批量创建数字资产记录
@@ -87,8 +87,8 @@ def batch_create_digital_asset():
     else:
         for asset in data["asset_list"]:
             # 检测每个对象中都是否包含必填字段
-            if not all(key in asset for key in ["user_id", "asset_type", "contract_address"]):
-                return response(code=400, message="asset list item must contain user_id, asset_type, contract_address")
+            if not all(key in asset for key in ["user_id", "asset_type", "contract_address", "chain"]):
+                return response(code=400, message="asset list item must contain user_id, asset_type, contract_address, chain")
             # 对json对象进行处理
             if asset.get("asset_metadata"):
                 asset["asset_metadata"] = json.dumps(asset["asset_metadata"])
@@ -131,29 +131,72 @@ def get_digital_asset():
     # 根据用户id获取钱包地址
     user_wallet_address = users_db.get_user_by_id(user_id).get("wallet_address").lower()
 
-    # 从库中查询其资产信息，分别查token和nft
-    token_addresses = []
-    nft_addresses = []
+   
     if user_wallet_address is not None and user_wallet_address != "":
-        digital_assets = digital_assets_db.get_assets_by_user_id(user_id)
-        for item in digital_assets:
-            if item.get("asset_type") == 'TOKEN':
-                token_addresses.append(item.get("contract_address").lower())
-            elif item.get("asset_type") == 'NFT':
-                nft_addresses.append(item.get("contract_address").lower())
-   
-    
-    # 从对应的链上获取token和nft信息
-    token_list = get_token_balance(wallet_address=user_wallet_address, chain=chain, token_addresses=token_addresses, limit=limit)
-   
-    nft_list = get_wallet_nfts(wallet_address=user_wallet_address, chain=chain, limit=limit, token_addresses=nft_addresses)
+        if chain is not None:
+            #只查某个链上的资产
+            # 从库中查询其资产信息，分别查token和nft
+            token_addresses = []
+            nft_addresses = []
+           
+            digital_assets = digital_assets_db.get_assets_by_user_id(user_id,chain_key=chain)
+            # print(digital_assets)
+            for item in digital_assets:
+                if item.get("asset_type") == 'TOKEN':
+                    token_addresses.append(item.get("contract_address").lower())
+                elif item.get("asset_type") == 'NFT':
+                    nft_addresses.append(item.get("contract_address").lower())
+            print(token_addresses)
+            print(nft_addresses)
+            # 从对应的链上获取token和nft信息
+            token_list = get_token_balance(wallet_address=user_wallet_address, chain=chain, token_addresses=token_addresses, limit=limit)
+        
+            nft_list = get_wallet_nfts(wallet_address=user_wallet_address, chain=chain, limit=limit, token_addresses=nft_addresses)
+            
 
-    # 合并token和nft信息并返回
-    result = {
-        "token_list": token_list,
-        "nft_list": nft_list
-    }
-    
+            # 合并token和nft信息并返回
+            result = []
+            result.append({
+                "token_list": token_list,
+                "nft_list": nft_list
+            })
+        else:
+            #需要对不同链上的资产拆分，分别查
+            digital_assets = digital_assets_db.get_assets_by_user_id(user_id)
+            chain_list = []
+            assets_group_map = {}
+            for item in digital_assets:
+                if item.get("chain_key") not in chain_list:
+                    chain_list.append(item.get("chain_key"))
+                    assets_group_map[item.get("chain_key")] = []
+                    assets_group_map[item.get("chain_key")].append(item)
+                else:
+                    assets_group_map[item.get("chain_key")].append(item)
+            print(chain_list)
+            
+            result = []
+            for chain in chain_list:
+                token_addresses = []
+                nft_addresses = []
+                for item in assets_group_map[chain]:
+                    if item.get("asset_type") == 'TOKEN':
+                        token_addresses.append(item.get("contract_address").lower())
+                    elif item.get("asset_type") == 'NFT':
+                        nft_addresses.append(item.get("contract_address").lower())
+                # print(chain)
+                # print(token_addresses)
+                # print(nft_addresses)
+                # 从对应的链上获取token和nft信息
+                token_list = get_token_balance(wallet_address=user_wallet_address, chain=chain, token_addresses=token_addresses, limit=limit)
+                nft_list = get_wallet_nfts(wallet_address=user_wallet_address, chain=chain, limit=limit, token_addresses=nft_addresses)
+                # 合并token和nft信息并返回
+                temp = {
+                    "chain": chain,
+                    "token_list": token_list,
+                    "nft_list": nft_list
+                }
+                result.append(temp)
+
     return response(data=result, message="Get digital asset successfully")
 
 
@@ -172,8 +215,8 @@ def batch_update_digital_asset():
     else:
         for asset in data["asset_list"]:
             # 检测每个对象中都是否包含必填字段
-            if not all(key in asset for key in ["user_id", "asset_type", "contract_address"]):
-                return response(code=400, message="asset list item must contain user_id, asset_type, contract_address")
+            if not all(key in asset for key in ["user_id", "asset_type", "contract_address", "chain"]):
+                return response(code=400, message="asset list item must contain user_id, asset_type, contract_address, chain")
             # 对json对象进行处理
             if asset.get("asset_metadata"):
                 asset["asset_metadata"] = json.dumps(asset["asset_metadata"])

@@ -2,14 +2,14 @@ from app import mysql
 from app.common.tools import datetime_serializer
 
 
-def get_assets_by_user_id(user_id, is_display=None):
+def get_assets_by_user_id(user_id, chain_key=None):
     """根据用户 ID 获取其所有数字资产, 参数is_display为1时只获取要展示的资产"""
     
     cur = mysql.connection.cursor() 
-    if is_display is None:
+    if chain_key is None:
         cur.execute("SELECT * FROM digital_assets WHERE user_id = %s AND data_status=0", (user_id,))
     else:
-        cur.execute("SELECT * FROM digital_assets WHERE user_id = %s AND is_display = %s AND data_status=0 order by display_order desc", (user_id, is_display))
+        cur.execute("SELECT * FROM digital_assets WHERE user_id = %s AND data_status=0 AND chain_key = %s", (user_id, chain_key,))
 
     
     assets = cur.fetchall()
@@ -27,9 +27,10 @@ def get_assets_by_user_id(user_id, is_display=None):
                 "token_id": item[5],
                 "amount": item[6],
                 "asset_metadata": item[7],
-                "is_display": item[8],
-                "display_order": item[9],
-                "created_at": datetime_serializer(item[10])
+                "chain_key": item[8],
+                "is_display": item[9],
+                "display_order": item[10],
+                "created_at": datetime_serializer(item[11])
             }
             result.append(temp.copy())
     return result
@@ -51,21 +52,22 @@ def get_asset_by_id(asset_id):
                 "token_id": item[5],
                 "amount": item[6],
                 "asset_metadata": item[7],
-                "is_display": item[8],
-                "display_order": item[9],
-                "created_at": datetime_serializer(item[10])
+                "chain_key": item[8],
+                "is_display": item[9],
+                "display_order": item[10],
+                "created_at": datetime_serializer(item[11])
             }
     return result
 
-def add_digital_asset(user_id, asset_type, contract_address, name=None, token_id=None, amount=None, asset_metadata=None, is_display=None, display_order=None):
+def add_digital_asset(user_id, asset_type, contract_address, chain_key, name=None, token_id=None, amount=None, asset_metadata=None, is_display=None, display_order=None):
     """添加新的数字资产"""
     cur = mysql.connection.cursor()
     try:
         sql = """
-            INSERT INTO digital_assets (user_id, asset_type, contract_address, name, token_id, amount, asset_metadata, is_display, display_order)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO digital_assets (user_id, asset_type, contract_address, chain_key, name, token_id, amount, asset_metadata, is_display, display_order)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cur.execute(sql, (user_id, asset_type, contract_address, name, token_id, amount, asset_metadata, is_display, display_order))
+        cur.execute(sql, (user_id, asset_type, contract_address, chain_key, name, token_id, amount, asset_metadata, is_display, display_order))
         mysql.connection.commit()
         cur.close()
         return cur.lastrowid  # 返回插入的资产 ID
@@ -129,10 +131,10 @@ def batch_insert_digital_assets(asset_list):
     cur = mysql.connection.cursor()
     try:
         sql = """
-            INSERT INTO digital_assets (user_id, asset_type, contract_address, name, token_id, amount, asset_metadata, is_display, display_order)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO digital_assets (user_id, asset_type, contract_address, chain_key, name, token_id, amount, asset_metadata, is_display, display_order)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        values = [(asset["user_id"], asset["asset_type"], asset["contract_address"], asset.get("name"), asset.get("token_id"), 
+        values = [(asset["user_id"], asset["asset_type"], asset["contract_address"], asset["chain"], asset.get("name"), asset.get("token_id"), 
                 asset.get("amount"), asset.get("asset_metadata"), asset.get("is_display"), asset.get("display_order"))for asset in asset_list]
 
         cur.executemany(sql, values)

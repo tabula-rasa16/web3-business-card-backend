@@ -17,7 +17,7 @@ def get_token_balance(wallet_address, chain, token_addresses=[], limit= 100):
         api_key=api_key,
         params=params,
     )
-    print(result)
+    # print(result)
     return result
 
 
@@ -42,5 +42,5 @@ def get_wallet_nfts(wallet_address, chain="eth", format="decimal", limit= 100, e
     params=params,
     )
 
-    print(result)
+    # print(result)
     return result
